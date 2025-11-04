@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Folhas Caindo da Sakura</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+        }
+
+        .message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            height: auto;
+            text-align: center;
+            font-size: 1.2rem;
+            line-height: 1.6em;
+            z-index: 10;
+            color: #fff;
+            padding: 20px;
+            box-sizing: border-box;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 0 20px rgba(255,182,193,0.5);
+            opacity: 0;
+            animation: fadeInOut 18s;
+        }
+
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .petal {
+            position: absolute;
+            pointer-events: none;
+            z-index: 2;
+            background-color: #e68aa2;
+            width: 12px;
+            height: 18px;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            transform: rotate(0deg);
+            box-shadow: 0 0 12px rgba(255,182,193,0.7);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="message">
+        "As 'Sakuras' florescem por pouco tempo, lembrando que a vida é passageira e delicada mas também é bela.<br>
+        Cada pétala que cai carrega um momento único."<br>
+        Por isso, te entrego cada uma dessas e trago uma pergunta:<br>
+        - Quando cultivaremos nossa árvore de cerejeira?<br>
+        "Que cada pétala represente um sonho nosso a se viver."
+    </div>
+
+    <script>
+        const petalColors = ['#e68aa2', '#cc5280', '#d4689a'];
+
+        // Armazena as posições já ocupadas no chão
+        const floorPositions = [];
+
+        function criarFolha() {
+            const numFolhas = 2;
+            for (let i = 0; i < numFolhas; i++) {
+                const petal = document.createElement('div');
+                petal.classList.add('petal');
+                const sizeW = 8 + Math.random()*12;
+                const sizeH = 12 + Math.random()*18;
+                petal.style.width = sizeW+'px';
+                petal.style.height = sizeH+'px';
+                petal.style.backgroundColor = petalColors[Math.floor(Math.random()*petalColors.length)];
+                petal.style.left = Math.random() * window.innerWidth + 'px';
+                petal.style.top = -20 + 'px';
+
+                const driftX = (Math.random()-0.5) * 150;
+                const rotateAngle = (Math.random()-0.5) * 360;
+                const duration = 22000 + Math.random()*5500;
+
+                setTimeout(() => {
+                    // Calcula posição final com pequenas variações para empilhar
+                    const floorY = window.innerHeight - sizeH - Math.random()*5;
+                    const floorX = parseFloat(petal.style.left) + Math.random()*5 - 2.5;
+
+                    floorPositions.push({
+                        x: floorX, y: floorY
+                    }); // opcional se quiser usar depois
+
+                    petal.animate([{
+                        transform: 'translate(0px,0px) rotate(0deg)'
+                    },
+                        {
+                            transform: `translate(${driftX}px,${floorY}px) rotate(${rotateAngle}deg)`
+                        }], {
+                        duration: duration, easing: 'ease-in-out', iterations: 1, fill: 'forwards'
+                    });
+                }, 5500); // atraso
+
+                document.body.appendChild(petal);
+            }
+
+            setTimeout(criarFolha, 500);
+        }
+
+        setTimeout(criarFolha, 4000);
+    </script>
+
+</body>
+</html>
